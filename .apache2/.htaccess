@@ -1,0 +1,34 @@
+RewriteEngine on
+RewriteCond %{HTTPS} off 
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+RewriteRule ^events/analytics/public/v1/events/raw apis/raw.php
+RewriteRule ^svc/wl/auth/public/v1/site/availability/list apis/list.php
+RewriteRule ^auth/fcc/randomize apis/randomize.php
+RewriteRule ^auth/fcc/login apis/login.php
+RewriteRule ^svc/wl/auth/signout apis/signout.php
+RewriteRule ^events/analytics/public/v4/events/logs apis/logs.php
+RewriteCond %{THE_REQUEST} \s/+(.+)\.php [NC]
+RewriteRule ^ /%1 [R=301,L]
+RewriteBase /
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{THE_REQUEST} \s/([^.]*)\.php/?\s [NC]
+RewriteRule ^  %1? [R=301,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule ^(.*)/?$ /$1.php [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/$ $1.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ErrorDocument 404 /nf.php
+ErrorDocument 403 /nf.php
+RewriteRule (^|/)private(/|$) - [F]
+RewriteRule (^|/)session.nil(/|$) - [F]
+Options -Indexes
